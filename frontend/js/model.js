@@ -13,14 +13,16 @@ class Model {
 
     if (!this.todos || this.todos.length === 0) {
       this.todos = [
-        { id: 0, title: 'Learn JS', description: 'Watch JS Tutorials', completed: false, archived: false }
+        { id: 0, title: 'Learn JS', description: 'Watch JS Tutorials', completed: false, archived: false, dueDate: null, dueTime: null }
       ];
       this.currentId = 1;
     } else {
-      // Migrar todos antiguos sin propiedad 'archived'
+      // Migrar todos antiguos sin propiedades 'archived', 'dueDate' y 'dueTime'
       this.todos = this.todos.map(todo => ({
         ...todo,
-        archived: todo.archived ?? false
+        archived: todo.archived ?? false,
+        dueDate: todo.dueDate ?? null,
+        dueTime: todo.dueTime ?? null
       }));
       this.currentId = this.todos[this.todos.length - 1].id + 1;
     }
@@ -34,8 +36,8 @@ class Model {
     return this.todos.map(todo => ({ ...todo }));
   }
 
-  addTodo(title, description) {
-    const todo = { id: this.currentId++, title, description, completed: false, archived: false };
+  addTodo(title, description, dueDate = null, dueTime = null) {
+    const todo = { id: this.currentId++, title, description, completed: false, archived: false, dueDate, dueTime };
     this.todos.push(todo);
     this.save();
     return { ...todo };

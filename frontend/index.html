@@ -79,6 +79,18 @@
                 <input id="modal-completed" type="checkbox" />
               </div>
             </div>
+            <div class="form-group d-inline-flex ml-4">
+              <label>Due Date</label>
+              <div class="mt-1 ml-2">
+                <input id="modal-due-date" type="date" />
+              </div>
+            </div>
+            <div class="form-group d-inline-flex ml-2">
+              <label>Due Time</label>
+              <div class="mt-1 ml-2">
+                <input id="modal-due-time" type="time" />
+              </div>
+            </div>
           </form>
         </div>
         <div class="modal-footer">
@@ -110,10 +122,24 @@
               <label class="m-sm-0">Description</label>
               <input type="text" id="description" class="form-control ml-sm-2" placeholder="Watch JS Tutorials">
             </div>
+            <div class="col-sm-2 d-sm-flex align-items-center mt-2 mt-sm-0">
+              <label class="m-sm-0 mr-2">Add Date?</label>
+              <input type="checkbox" id="add-date-checkbox" style="width: auto;">
+            </div>
             <div class="col-sm-2 d-sm-flex justify-content-end mt-4 mt-sm-0">
               <button type="button" class="btn btn-info btn-block" id="add">
                 Add
               </button>
+            </div>
+          </div>
+          <div class="row mt-2" id="date-time-fields" style="display: none;">
+            <div class="col-sm-6">
+              <label class="m-sm-0">Due Date</label>
+              <input type="date" id="due-date" class="form-control">
+            </div>
+            <div class="col-sm-6">
+              <label class="m-sm-0">Due Time</label>
+              <input type="time" id="due-time" class="form-control">
             </div>
           </div>
         </form>
@@ -125,6 +151,7 @@
             <tr>
               <th scope="col">Todo</th>
               <th scope="col">Description</th>
+              <th scope="col">Due Date/Time</th>
               <th scope="col">
                 <div class="d-flex justify-content-center">
                   Completed

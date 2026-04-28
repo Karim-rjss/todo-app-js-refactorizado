@@ -19,6 +19,8 @@ class Modal {
     this.description = document.getElementById('modal-description');
     this.btn = document.getElementById('modal-btn');
     this.completed = document.getElementById('modal-completed');
+    this.dueDate = document.getElementById('modal-due-date');
+    this.dueTime = document.getElementById('modal-due-time');
     this.alert = new Alert('modal-alert');
     this.todo = null;
   }
@@ -28,6 +30,8 @@ class Modal {
     this.title.value = todo.title;
     this.description.value = todo.description;
     this.completed.checked = todo.completed;
+    this.dueDate.value = todo.dueDate || '';
+    this.dueTime.value = todo.dueTime || '';
   }
 
   onClick(callback) {
@@ -41,6 +45,8 @@ class Modal {
         title: this.title.value,
         description: this.description.value,
         completed: this.completed.checked,
+        dueDate: this.dueDate.value || null,
+        dueTime: this.dueTime.value || null,
       });
     };
   }
@@ -51,7 +57,22 @@ class AddTodo {
     this.btn = document.getElementById('add');
     this.title = document.getElementById('title');
     this.description = document.getElementById('description');
+    this.checkbox = document.getElementById('add-date-checkbox');
+    this.dateFields = document.getElementById('date-time-fields');
+    this.dueDate = document.getElementById('due-date');
+    this.dueTime = document.getElementById('due-time');
     this.alert = new Alert('alert');
+
+    // Mostrar/ocultar campos de fecha según checkbox
+    this.checkbox.addEventListener('change', () => {
+      if (this.checkbox.checked) {
+        this.dateFields.style.display = 'flex';
+      } else {
+        this.dateFields.style.display = 'none';
+        this.dueDate.value = '';
+        this.dueTime.value = '';
+      }
+    });
   }
 
   onClick(callback) {
@@ -61,9 +82,15 @@ class AddTodo {
         this.alert.show('Title and description are required');
       } else {
         this.alert.hide();
-        callback(this.title.value, this.description.value);
+        const dueDate = this.checkbox.checked ? this.dueDate.value : null;
+        const dueTime = this.checkbox.checked ? this.dueTime.value : null;
+        callback(this.title.value, this.description.value, dueDate, dueTime);
         this.title.value = '';
         this.description.value = '';
+        this.dueDate.value = '';
+        this.dueTime.value = '';
+        this.checkbox.checked = false;
+        this.dateFields.style.display = 'none';
       }
     };
   }
@@ -96,7 +123,7 @@ class View {
     this.addTodoForm = new AddTodo();
     this.modal = new Modal();
 
-    this.addTodoForm.onClick((title, description) => this.addTodo(title, description));
+    this.addTodoForm.onClick((title, description, dueDate, dueTime) => this.addTodo(title, description, dueDate, dueTime));
     this.modal.onClick((id, values) => this.editTodo(id, values));
 
     this.filters = new Filters();
@@ -120,8 +147,8 @@ class View {
     todos.forEach(todo => this.createRow(todo));
   }
 
-  addTodo(title, description) {
-    const todo = this.model.addTodo(title, description);
+  addTodo(title, description, dueDate = null, dueTime = null) {
+    const todo = this.model.addTodo(title, description, dueDate, dueTime);
     this.createRow(todo);
   }
 
@@ -140,7 +167,17 @@ class View {
     const row = document.getElementById(id);
     row.children[0].innerText = values.title;
     row.children[1].innerText = values.description;
-    row.children[2].children[0].checked = values.completed;
+    const dueDateTime = this.formatDueDateTime(values.dueDate, values.dueTime);
+    row.children[2].innerText = dueDateTime;
+    row.children[3].children[0].checked = values.completed;
+  }
+
+  formatDueDateTime(date, time) {
+    if (!date && !time) return '';
+    if (date && time) return `${date} ${time}`;
+    if (date) return date;
+    if (time) return time;
+    return '';
   }
 
   removeCompleted() {
@@ -148,7 +185,7 @@ class View {
     this.model.removeCompleted();
     const [, ...rows] = this.table.getElementsByTagName('tr');
     for (const row of rows) {
-      if (row.children[2].children[0].checked) row.remove();
+      if (row.children[3].children[0].checked) row.remove();
     }
   }
 
@@ -191,9 +228,11 @@ class View {
     const row = tbody.insertRow();
     row.setAttribute('id', todo.id);
 
+    const dueDateTime = this.formatDueDateTime(todo.dueDate, todo.dueTime);
     row.innerHTML = `
       <td>${todo.title}</td>
       <td>${todo.description}</td>
+      <td>${dueDateTime}</td>
       <td class="text-center"></td>
       <td class="text-right"></td>
     `;
@@ -202,20 +241,20 @@ class View {
     checkbox.type = 'checkbox';
     checkbox.checked = todo.completed;
     checkbox.onclick = () => this.toggleCompleted(todo.id);
-    row.children[2].appendChild(checkbox);
+    row.children[3].appendChild(checkbox);
 
     const removeBtn = document.createElement('button');
     removeBtn.classList.add('btn', 'btn-danger', 'mb-1', 'ml-1');
     removeBtn.innerHTML = '<i class="fa fa-trash"></i>';
     removeBtn.onclick = () => this.removeTodo(todo.id);
-    row.children[3].appendChild(removeBtn);
+    row.children[4].appendChild(removeBtn);
 
     const archiveBtn = document.createElement('button');
     archiveBtn.classList.add('btn', 'btn-warning', 'mb-1', 'ml-1');
     archiveBtn.innerHTML = todo.archived ? '<i class="fa fa-undo"></i>' : '<i class="fa fa-archive"></i>';
     archiveBtn.title = todo.archived ? 'Desarchivar' : 'Archivar';
     archiveBtn.onclick = () => this.archiveTodo(todo.id);
-    row.children[3].appendChild(archiveBtn);
+    row.children[4].appendChild(archiveBtn);
 
     const editBtn = document.createElement('button');
     editBtn.classList.add('btn', 'btn-primary', 'mb-1');
@@ -226,9 +265,11 @@ class View {
       id: todo.id,
       title: row.children[0].innerText,
       description: row.children[1].innerText,
-      completed: row.children[2].children[0].checked,
+      completed: row.children[3].children[0].checked,
+      dueDate: todo.dueDate,
+      dueTime: todo.dueTime,
     });
-    row.children[3].appendChild(editBtn);
+    row.children[4].appendChild(editBtn);
   }
 
   filter(filters) {
