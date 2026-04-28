@@ -1,0 +1,26 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Karim-rjss/todo-app-js.git"
+  },
+  "keywords": [],
+  "author": "David <correo@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Karim-rjss/todo-app-js/issues"
+  },
+  "homepage": "https://github.com/Karim-rjss/todo-app-js#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
+}
