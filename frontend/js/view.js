@@ -82,6 +82,11 @@ class Filters {
       callback({ type: data.get('type'), words: data.get('words') });
     };
   }
+
+  getSelectedType() {
+    const selected = this.form.querySelector('input[name="type"]:checked');
+    return selected ? selected.value : 'active';
+  }
 }
 
 class View {
@@ -95,11 +100,23 @@ class View {
     this.modal.onClick((id, values) => this.editTodo(id, values));
 
     this.filters = new Filters();
-    this.filters.onClick((filters) => this.filter(filters));
+    this.filters.onClick((filters) => this.handleFilter(filters));
   }
 
   render() {
-    const todos = this.model.getTodos();
+    const filterType = this.filters.getSelectedType();
+    let todos = [];
+    
+    if (filterType === 'active') {
+      todos = this.model.getActiveTodos();
+    } else if (filterType === 'completed') {
+      todos = this.model.getCompletedTodos();
+    } else if (filterType === 'archived') {
+      todos = this.model.getArchivedTodos();
+    } else {
+      todos = this.model.getTodos();
+    }
+    
     todos.forEach(todo => this.createRow(todo));
   }
 
@@ -110,6 +127,11 @@ class View {
 
   removeTodo(id) {
     this.model.removeTodo(id);
+    document.getElementById(id).remove();
+  }
+
+  archiveTodo(id) {
+    this.model.toggleArchived(id);
     document.getElementById(id).remove();
   }
 
@@ -132,6 +154,36 @@ class View {
 
   toggleCompleted(id) {
     this.model.toggleCompleted(id);
+  }
+
+  handleFilter(filters) {
+    const { type, words } = filters;
+    
+    // Obtener todos los todos según el tipo de filtro
+    let todos = [];
+    if (type === 'active') {
+      todos = this.model.getActiveTodos();
+    } else if (type === 'completed') {
+      todos = this.model.getCompletedTodos();
+    } else if (type === 'archived') {
+      todos = this.model.getArchivedTodos();
+    } else {
+      todos = this.model.getTodos();
+    }
+    
+    // Filtrar por palabras si se proporcionan
+    if (words) {
+      todos = todos.filter(todo =>
+        todo.title.includes(words) || todo.description.includes(words)
+      );
+    }
+    
+    // Limpiar tabla y renderizar de nuevo
+    const tbody = this.table.getElementsByTagName('tbody')[0];
+    const rows = Array.from(tbody.getElementsByTagName('tr'));
+    rows.forEach(row => row.remove());
+    
+    todos.forEach(todo => this.createRow(todo));
   }
 
   createRow(todo) {
@@ -158,6 +210,13 @@ class View {
     removeBtn.onclick = () => this.removeTodo(todo.id);
     row.children[3].appendChild(removeBtn);
 
+    const archiveBtn = document.createElement('button');
+    archiveBtn.classList.add('btn', 'btn-warning', 'mb-1', 'ml-1');
+    archiveBtn.innerHTML = todo.archived ? '<i class="fa fa-undo"></i>' : '<i class="fa fa-archive"></i>';
+    archiveBtn.title = todo.archived ? 'Desarchivar' : 'Archivar';
+    archiveBtn.onclick = () => this.archiveTodo(todo.id);
+    row.children[3].appendChild(archiveBtn);
+
     const editBtn = document.createElement('button');
     editBtn.classList.add('btn', 'btn-primary', 'mb-1');
     editBtn.innerHTML = '<i class="fa fa-pencil"></i>';
@@ -178,14 +237,19 @@ class View {
     for (const row of rows) {
       const [title, description, completed] = row.children;
       let shouldHide = false;
+      
+      // Filtrar por palabras
       if (words) {
         shouldHide = !title.innerText.includes(words) && !description.innerText.includes(words);
       }
-      const shouldBeCompleted = type === 'completed';
-      const isCompleted = completed.children[0].checked;
-      if (type !== 'all' && shouldBeCompleted !== isCompleted) {
-        shouldHide = true;
+      
+      // Filtrar por tipo
+      if (type === 'active') {
+        shouldHide = completed.children[0].checked; // Ocultar si está completada
+      } else if (type === 'completed') {
+        shouldHide = !completed.children[0].checked; // Ocultar si no está completada
       }
+      
       row.classList.toggle('d-none', shouldHide);
     }
   }

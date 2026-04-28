@@ -13,10 +13,15 @@ class Model {
 
     if (!this.todos || this.todos.length === 0) {
       this.todos = [
-        { id: 0, title: 'Learn JS', description: 'Watch JS Tutorials', completed: false }
+        { id: 0, title: 'Learn JS', description: 'Watch JS Tutorials', completed: false, archived: false }
       ];
       this.currentId = 1;
     } else {
+      // Migrar todos antiguos sin propiedad 'archived'
+      this.todos = this.todos.map(todo => ({
+        ...todo,
+        archived: todo.archived ?? false
+      }));
       this.currentId = this.todos[this.todos.length - 1].id + 1;
     }
   }
@@ -30,7 +35,7 @@ class Model {
   }
 
   addTodo(title, description) {
-    const todo = { id: this.currentId++, title, description, completed: false };
+    const todo = { id: this.currentId++, title, description, completed: false, archived: false };
     this.todos.push(todo);
     this.save();
     return { ...todo };
@@ -61,5 +66,29 @@ class Model {
     const index = this.findTodo(id);
     this.todos[index].completed = !this.todos[index].completed;
     this.save();
+  }
+
+  toggleArchived(id) {
+    const index = this.findTodo(id);
+    this.todos[index].archived = !this.todos[index].archived;
+    this.save();
+  }
+
+  getActiveTodos() {
+    return this.todos
+      .filter(todo => !todo.completed && !todo.archived)
+      .map(todo => ({ ...todo }));
+  }
+
+  getCompletedTodos() {
+    return this.todos
+      .filter(todo => todo.completed && !todo.archived)
+      .map(todo => ({ ...todo }));
+  }
+
+  getArchivedTodos() {
+    return this.todos
+      .filter(todo => todo.archived)
+      .map(todo => ({ ...todo }));
   }
 }
