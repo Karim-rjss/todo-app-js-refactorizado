@@ -1,36 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- Fontawesome -->
-  <link
-    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
   <!-- Bootswatch Darkly Theme -->
-  <link
-    href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/darkly/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/darkly/bootstrap.min.css" rel="stylesheet" />
   <title>JS Todo List</title>
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">JS Todo List</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-  
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
@@ -46,15 +35,9 @@
         <input type="radio" name="type" value="completed" class="mx-1">
         <label for="female" class="mb-0">Completed</label>
         <input type="radio" name="type" value="uncompleted" class="mx-1">
-        <label for="other" class="mr-2 mb-0">Uncompleted</label> 
+        <label for="other" class="mr-2 mb-0">Uncompleted</label>
 
-        <input
-          class="form-control mr-sm-2"
-          type="search"
-          name="words"
-          placeholder="Words"
-          aria-label="Search"
-        >
+        <input class="form-control mr-sm-2" type="search" name="words" placeholder="Words" aria-label="Search">
         <button class="btn btn-outline-info my-2 my-sm-0" type="submit" id="search">
           Search
         </button>
@@ -63,26 +46,15 @@
   </nav>
 
   <!-- Modal -->
-  <div
-    class="modal fade"
-    id="modal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">
             Edit Todo
           </h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -93,12 +65,7 @@
           <form>
             <div class="form-group">
               <label>Title</label>
-              <input
-                id="modal-title"
-                type="text"
-                class="form-control"
-                placeholder="Do Something"
-              />
+              <input id="modal-title" type="text" class="form-control" placeholder="Do Something" />
             </div>
             <div class="form-group">
               <label>Description</label>
@@ -109,10 +76,7 @@
             <div class="form-group d-inline-flex">
               <label>Completed</label>
               <div class="mt-1 ml-2">
-                <input
-                id="modal-completed"
-                type="checkbox"
-              />
+                <input id="modal-completed" type="checkbox" />
               </div>
             </div>
           </form>
@@ -136,25 +100,15 @@
       </div>
 
       <div>
-        <form> 
+        <form>
           <div class="row">
             <div class="col-sm-3 d-sm-flex align-items-center">
               <label class="m-sm-0">Title</label>
-              <input
-                type="text"
-                id="title"
-                class="form-control ml-sm-2"
-                placeholder="Learn JS"
-              >
+              <input type="text" id="title" class="form-control ml-sm-2" placeholder="Learn JS">
             </div>
             <div class="px-sm-2 col-sm-7 d-sm-flex align-items-center mt-2 mt-sm-0">
               <label class="m-sm-0">Description</label>
-              <input
-                type="text"
-                id="description"
-                class="form-control ml-sm-2"
-                placeholder="Watch JS Tutorials"
-              >
+              <input type="text" id="description" class="form-control ml-sm-2" placeholder="Watch JS Tutorials">
             </div>
             <div class="col-sm-2 d-sm-flex justify-content-end mt-4 mt-sm-0">
               <button type="button" class="btn btn-info btn-block" id="add">
@@ -188,14 +142,15 @@
   </main>
 
   <!-- JQuery -->
-  <script
-    src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
-    crossorigin="anonymous"
-  ></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
   <!-- Bootstrap -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <!-- JS Code -->
-  <script src="js/app.js" type="module"></script>
+  <!-- JS Code -->
+  <script src="js/model.js"></script>
+  <script src="js/view.js"></script>
+  <script src="js/app.js"></script>
 </body>
+
 </html>
