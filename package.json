@@ -21,7 +21,7 @@
   "homepage": "https://github.com/Karim-rjss/todo-app-js#readme",
   "dependencies": {
     "express": "^5.2.1",
-    "json-server": "^1.0.0-beta.15"
+    "json-server": "^0.17.4"
   },
   "devDependencies": {
     "jest": "^30.3.0"
